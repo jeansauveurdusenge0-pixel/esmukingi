@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ES Mukingi School System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ICONS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+/* ================== ROOT ================== */
+:root{
+ --primary:#0b3c5d;
+ --secondary:#f4b400;
+ --bg:#f4f6f9;
+ --text:#111;
+}
+body.dark{
+ --bg:#0f172a;
+ --text:#e5e7eb;
+}
+
+*{box-sizing:border-box}
+body{
+ margin:0;
+ font-family:Segoe UI,Arial,sans-serif;
+ background:var(--bg);
+ color:var(--text);
+ transition:.3s;
+}
+footer{ text-align:center;
+ padding:20px;
+ background:var(--primary);
+ color:lab(99.24% -0.32 -0.13);
+}
+
+/* ================== TOP BAR ================== */
+header{
+ position:fixed;
+ top:0;left:0;right:0;
+ height:60px;
+ background:linear-gradient(90deg,var(--primary),#06283d);
+ color:#fff;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ padding:0 16px;
+ z-index:1000;
+}
+.logo{
+ display:flex;
+ align-items:center;
+ gap:10px;
+ font-weight:700;
+ cursor:pointer;
+}
+.logo img{
+ width:34px;height:34px;
+ border-radius:50%;
+}
+header .right i{
+ font-size:22px;
+ margin-left:18px;
+ cursor:pointer;
+}
+
+/* ================== SIDE MENU ================== */
+#menu{
+ position:fixed;
+ top:60px;right:-280px;
+ width:280px;height:100%;
+ background:#0b3c5d;
+ color:#fff;
+ padding:15px;
+ transition:.3s;
+ z-index:999;
+ overflow-y:auto;
+}
+#menu a{
+ display:block;
+ padding:12px;
+ border-radius:10px;
+ margin-bottom:6px;
+ cursor:pointer;
+}
+#menu a:hover{background:rgba(255,255,255,.15)}
+#overlay{
+ position:fixed;inset:0;
+ background:rgba(0,0,0,.4);
+ display:none;
+ z-index:998;
+}
+
+/* ================== HOME BUTTON ================== */
+#homeBtn{
+ position:fixed;
+ bottom:20px;right:20px;
+ width:55px;height:55px;
+ background:var(--secondary);
+ border-radius:50%;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:22px;
+ cursor:pointer;
+ box-shadow:0 10px 25px rgba(0,0,0,.3);
+ z-index:900;
+}
+
+/* ================== SECTIONS ================== */
+section{
+ min-height:100vh;
+ padding:90px 20px 40px;
+ display:none;
+ animation:fade .6s;
+}
+section.active{display:block}
+@keyframes fade{
+ from{opacity:0;transform:translateY(30px)}
+ to{opacity:1;transform:none}
+}
+.section-title{
+ background:linear-gradient(90deg,#38bdf8,#0ea5e9);
+ color:#fff;
+ padding:14px;
+ border-radius:14px;
+ font-size:26px;
+ font-weight:700;
+ margin-bottom:25px;
+}
+
+/* ================== CARDS ================== */
+.card{
+ background:#fff;
+ padding:22px;
+ border-radius:18px;
+ margin-bottom:22px;
+ box-shadow:0 10px 30px rgba(0,0,0,.12);
+}
+body.dark .card{background:#1e293b}
+
+/* ================== BUTTONS ================== */
+button{
+ background:var(--primary);
+ color:#fff;
+ border:none;
+ padding:12px 20px;
+ border-radius:12px;
+ cursor:pointer;
+ font-size:16px;
+}
+button:hover{opacity:.85}
+
+/* ================== INPUTS ================== */
+input,textarea{
+ width:100%;
+ padding:12px;
+ margin:10px 0;
+ border-radius:10px;
+ border:1px solid #ccc;
+ font-family:inherit;
+}
+
+/* ================== ANNOUNCEMENTS ================== */
+.ann{
+ background:#eef3f7;
+ padding:15px;
+ border-radius:14px;
+ margin-bottom:14px;
+ display:flex;
+ gap:12px;
+}
+body.dark .ann{background:#334155}
+.avatar{
+ width:44px;height:44px;
+ border-radius:50%;
+ background:var(--primary);
+ color:#fff;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-weight:700;
+}
+
+/* ================== HOME HERO ================== */
+.hero{
+ background:
+ linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),
+ url("https://images.unsplash.com/photo-1523240795612-9a054b0db644");
+ background-size:cover;
+ background-position:center;
+ color:#fff;
+ border-radius:24px;
+ padding:40px;
+}
+.photos{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+ gap:12px;
+ margin-top:20px;
+}
+.photos img{
+ width:100%;
+ height:120px;
+ object-fit:cover;
+ border-radius:14px;
+}
+
+/* ================== MAP ================== */
+iframe{width:100%;height:300px;border:0;border-radius:18px}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header>
+ <div class="logo" onclick="show('home')">
+   <img src="ASTRO.png" alt="logo">
+  <h1> ES MUKINGI</h1>
+ </div>
+ <div class="right">
+   <i class="fa fa-gear" onclick="show('settings')"></i>
+   <i class="fa fa-bars" onclick="openMenu()"></i>
+ </div>
+</header>
+
+<div id="overlay" onclick="closeMenu()"></div>
+
+<!-- MENU -->
+<div id="menu">
+ <a onclick="nav('home')"><i class="fa fa-home"></i> Home</a>
+ <a onclick="nav('about')"><i class="fa fa-school"></i> About ESM</a>
+ <a onclick="nav('anthem')"><i class="fa fa-music"></i> Anthem</a>
+ <a onclick="nav('location')"><i class="fa fa-map"></i> Location</a>
+ <a onclick="nav('ann')"><i class="fa fa-bullhorn"></i> Announcements</a>
+ <a onclick="nav('register')"><i class="fa fa-user-plus"></i> Registration</a>
+ <a onclick="nav('feedback')"><i class="fa fa-comments"></i> Public Feedback</a>
+ <a onclick="nav('aboutSite')"><i class="fa fa-code"></i> About Website</a>
+ <a onclick="nav('help')"><i class="fa fa-circle-question"></i> Help</a>
+</div>
+
+<div id="homeBtn" onclick="show('home')">
+ <i class="fa fa-home"></i>
+</div>
+
+<!-- HOME -->
+<section id="home" class="active">
+ <div class="hero">
+  <h1>Welcome to Ecole Secondaire MUKINGI</h1>
+  <p><b>INDATWA ZA ESM dukore byinshi byiza kandi vuba</b></p>
+  <div class="photos">
+   <img src="ASTRO.png" alt="photo">
+   <img src="esmlogo.jpg">
+   <img src="https://images.unsplash.com/photo-1523580846011-d3a5bc25702b">
+  
+  </div>
+  <h3>Thanks to visit this website.You will exprole more about esm by this site.</h3>
+    
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+ <div class="section-title">About ES Mukingi</div>
+ <div class="card">
+  <p>
+   Ecole Secondaire MUKINGI (ESM) yashinzwe mu 1996 i Ruhango, Byimana.
+   Ni ishuri ryiyemeje gutanga uburezi bufite ireme,
+   rishingiye ku bumenyi, indangagaciro n’ikoranabuhanga.
+  </p>
+  <ul>
+   <li>Founded: 1996</li>
+   <li>Location: Ruhango – Byimana</li>
+   <li>Motto: URISHYIRIRAHO WOWE</li>
+   <li>Curriculum ya NESA</li>
+   <li>E-learning & Library</li>
+  </ul>
+    <h3>About ES Mukingi</h3>
+    <h4>Vision</h4>
+    <p>To be a leading institution providing quality education.</p>
+
+    <h4>Mission</h4>
+    <p>
+      To promote discipline, responsibility, and academic excellence
+      through innovative teaching and strong values.
+    </p>
+
+    <h4>Values</h4>
+    <p>Discipline, Integrity, Hard work, Respect.</p>
+
+    <h4>Motto</h4>
+    <p>Education for a Better Future.</p>
+    <h4>Sections</h4>
+    <ol>
+        <li><b>Math stream 2b</b></li>
+        <li><b>Languages</b></li>
+        <li><b>MEC(Expiring)</b></li>
+        <li><b>LFK(Expiring)</b></li>
+        <h5><b>+</b></h5>
+        <li><b>Ó Level</b></li>
+ <h2><u>School ANTHEM</u></h2>
+ <p><b>1.ESM nziza shuri dukunda,</b></p>
+ <p><b>Twebwe in ndatwa turakurata tugusingiza,</b></p>
+ <p><b>Gicumbi cy`umuco n`amajyabere,</b></p>
+<p><b>Uburere n`ubumenyi wabigize intego.</b></p>
+<br>
+<p><b>2.Susuruka Karisimbi gahore ku isonga.</b></p><p><b>Usurutsa abagusanga,Usa n'isumba abasa.</b></p><p><b>Isuku yawe isusurutsa Bose bagasubirana bagusanga.</b></p><b>Bagusingiza uko uri soko y`ubuzima.</b></p><br>
+<p><b>3.Sugira usagambe indatwa za ESM uri mutarushwa.</b></p>
+<p><b>Abarezi bacu turabadhimira ntore zigihugu mukomeze imihigoo.</b></p>
+
+ 
+    </ol>
+  </div>
+
+</section>
+
+<!-- ANTHEM -->
+<section id="anthem">
+ <div class="section-title">School Anthem</div>
+ <div class="card">
+  <p>
+   <b>1.<b> ESM nziza shuri dukunda,<br>
+ <b>Twebwe indatwa turakurata tugusingiza,<br>
+ <b>Gicumbi cy`umuco n`amajyabere,<br>
+<b>Uburere n`ubumenyi wabigize intego.<br>
+ <br><br>
+   <b>2.Susuruka Karisimbi gahore ku isonga.<br><br>
+   <b> Usanganiza abagusanga,<br>
+    <b> Usa n`isumba abasa.<br>
+      <b> Isuku yawe isusurutsa bose,<br>
+        <b> Bagasubirana bagusana,<br>
+          <b> Bagusingiza uko uri soko y`ubuzima.<br><br>
+   <b>3.</b> Sugira usagambe indatwa za ESM  uri Mutarushwa<br>
+    <b> Abarezi bacu turabashimira ntore z'igihugu mukomeze imihigo..<br>
+  </p>
+ </div>
+</section>
+
+<!-- LOCATION -->
+<section id="location">
+ <div class="section-title">School Location</div>
+ <div class="card">
+  <p>ES Mukingi iherereye i Ruhango, Byimana – Rwanda.</p>
+  <iframe src="https://maps.google.com/maps?q=Byimana%20Ruhango&t=&z=13&ie=UTF8&iwloc=&output=embed"></iframe>
+ </div>
+</section>
+
+<!-- ANNOUNCEMENTS -->
+<section id="ann">
+ <div class="section-title">Announcements</div>
+ <div id="annList"></div>
+ <div class="card">
+  <input id="annPass" placeholder="Admin password">
+  <textarea id="annText" placeholder="Write announcement"></textarea>
+  <button onclick="addAnn()">Post</button>
+ </div>
+</section>
+
+<!-- REGISTRATION -->
+<section id="register">
+ <div class="section-title">Student Registration</div>
+ <div class="card">
+  <input placeholder="Full name">
+  <input placeholder="Reg / Index Number">
+  <input placeholder="Class">
+  <input placeholder="Phone">
+  <button>Submit Registration</button>
+ </div>
+</section>
+
+<!-- FEEDBACK -->
+<section id="feedback">
+ <div class="section-title">Public Feedback</div>
+ <textarea id="fbText"></textarea>
+ <button onclick="sendFb()">Send</button>
+ <div id="fbList"></div>
+</section>
+
+<!-- ABOUT WEBSITE -->
+<section id="aboutSite">
+ <div class="section-title">About Website</div>
+ <div class="card">
+  <p>
+   Developed by <b>ASTROTIGERS</b><br>
+   Project: ASTRO PLANNER<br>
+   Lead Developer: DUSENGE Jean Sauveur<br>
+   Email: jeansauveurdusenge0@gmail.com
+  </p>
+ </div>
+</section>
+
+<!-- SETTINGS -->
+<section id="settings">
+ <div class="section-title">Settings</div>
+ <ul>
+    <li><button onclick="toggleTheme()">Toggle Dark/Light Theme</button></li>
+    <br>
+    <li><button onclick="toggleNotifications()">Allow notifications</button></li>
+    <br>
+    <li><button onclick="toggleQuickMode()">Quick mode</button></li>
+</ul>
+</section>
+
+<!-- HELP -->
+<section id="help">
+ <div class="section-title">Help</div>
+ <div class="card">
+  Email: esmukingi1996@gmail.com<br>
+  Phone: +250792343903
+ </div>
+</section>
+<footer>
+    <P>ASTRO PLANNER</P>
+    <p>&copy; 2026 Es Mukingi. All rights reserved.</p>
+</footer>
+
+<script>
+const adminPass="admin123";
+
+function show(id){
+ document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+ window.scrollTo(0,0);
+}
+
+function nav(id){closeMenu();show(id)}
+function openMenu(){
+ document.getElementById("menu").style.right="0";
+ document.getElementById("overlay").style.display="block";
+}
+function closeMenu(){
+ document.getElementById("menu").style.right="-280px";
+ document.getElementById("overlay").style.display="none";
+}
+
+function addAnn(){
+ if(document.getElementById("annPass").value!==adminPass)
+  return alert("Wrong password");
+ const t=document.getElementById("annText").value;
+ if(!t)return;
+ document.getElementById("annList").innerHTML+=
+ `<div class="ann"><div class="avatar">A</div><div>${t}</div></div>`;
+ document.getElementById("annText").value="";
+}
+
+function sendFb(){
+ const t=document.getElementById("fbText").value;
+ if(!t)return;
+ document.getElementById("fbList").innerHTML+=
+ `<div class="card">${t}</div>`;
+ document.getElementById("fbText").value="";
+}
+
+function toggleTheme(){
+ document.body.classList.toggle("dark");
+}
+</script>
+
+</body>
+</html>
